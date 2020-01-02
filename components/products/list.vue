@@ -64,9 +64,9 @@ export default {
     Object.freeze(arr)
     this.proxy = new Proxy({}, {
       get (target, val) {
-        if (val === 'price') {
+        if (val === 's-price') {
           return [].concat(arr).sort((a, b) => a.price - b.price)
-        } else if (val === 'comment') {
+        } else if (val === 's-comment' || val === 's-visit') {
           return [].concat(arr).sort((a, b) => b.comment - a.comment)
         } else {
           return arr
@@ -82,19 +82,8 @@ export default {
       let self = this
       this.nav.forEach(item => item.acitve = false)
       this.nav[index].acitve = true
-      switch (ctx.name) {
-        case 's-price':
-          this.newList = this.proxy.price
-          break
-        case 's-visit':
-          this.newList = this.proxy.comment
-          break
-        case 's-comment':
-          this.newList = this.proxy.comment
-          break
-        default:
-          this.newList = this.proxy.default
-      }
+      let { name } = this.nav.find(key => ctx.name === key.name)
+      this.newList = this.proxy[name]
     }
   }
 }
